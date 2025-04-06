@@ -4,6 +4,7 @@ class GameController {
   List<SetCard> deck = [];
   List<SetCard> board = [];
   List<SetCard> selectedCards = [];
+  List<SetCard> hintCards = [];
 
   GameController() {
     startNewGame();
@@ -14,6 +15,7 @@ class GameController {
     board = deck.sublist(0, 12);
     deck.removeRange(0, 12);
     selectedCards = [];
+    hintCards = [];
   }
 
   void selectCard(SetCard card) {
@@ -22,6 +24,8 @@ class GameController {
     } else {
       selectedCards.add(card);
     }
+
+    hintCards.clear(); // 힌트 지우기
 
     if (selectedCards.length == 3) {
       if (isSet(selectedCards[0], selectedCards[1], selectedCards[2])) {
@@ -50,6 +54,21 @@ class GameController {
         board[index] = deck.removeAt(0);
       } else {
         board.removeAt(index);
+      }
+    }
+  }
+
+  void findHint() {
+    hintCards.clear();
+    for (int i = 0; i < board.length; i++) {
+      for (int j = i + 1; j < board.length; j++) {
+        for (int k = j + 1; k < board.length; k++) {
+          final a = board[i], b = board[j], c = board[k];
+          if (isSet(a, b, c)) {
+            hintCards = [a, b, c];
+            return;
+          }
+        }
       }
     }
   }

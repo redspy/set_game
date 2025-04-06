@@ -4,12 +4,14 @@ import '../models/set_card.dart';
 class CardWidget extends StatelessWidget {
   final SetCard card;
   final bool isSelected;
+  final bool isHint;
   final VoidCallback onTap;
 
   const CardWidget({
     super.key,
     required this.card,
     required this.isSelected,
+    required this.isHint,
     required this.onTap,
   });
 
@@ -18,16 +20,28 @@ class CardWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        color: isSelected ? Colors.amber[200] : Colors.white,
+        color: isSelected
+            ? Colors.amber[300]
+            : isHint
+                ? Colors.lightBlue[100]
+                : Colors.white,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+            color: isHint ? Colors.blue : Colors.grey,
+            width: isHint ? 2 : 1,
+          ),
+          borderRadius: BorderRadius.circular(12),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
               card.count,
               (index) => Icon(
                 _getShapeIcon(card.shape),
                 color: _getColor(card.color),
-                size: 24,
+                size: 28,
               ),
             ),
           ),
@@ -43,7 +57,7 @@ class CardWidget extends StatelessWidget {
       case 1:
         return Icons.square;
       case 2:
-        return Icons.change_history; // triangle
+        return Icons.change_history;
       default:
         return Icons.help;
     }
